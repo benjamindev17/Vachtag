@@ -7,8 +7,8 @@
  */
 
 // Identifiants des vues disponibles
+// (vue-login retirée temporairement — auth désactivée)
 export const VUES = {
-  LOGIN:     'vue-login',
   DASHBOARD: 'vue-dashboard',
   FORM:      'vue-form',
   LIST:      'vue-list',

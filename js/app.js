@@ -73,16 +73,15 @@ function gererChangementAuth(user) {
     const nomAffiche = (user.displayName || user.email || '').split(' ')[0];
     $('user-name').textContent = nomAffiche || 'Agriculteur';
 
-    // Masquage de toute erreur de connexion résiduelle
-    $('login-error').classList.add('hidden');
-
     afficherVue(VUES.DASHBOARD);
     demarrerEcouteBetail();
   } else {
     arreterEcouteBetail();
     betailEnMemoire = [];
     rafraichirIndicateurs();
-    afficherVue(VUES.LOGIN);
+    // L'écran de connexion ayant été retiré en mode dev,
+    // on reste sur le tableau de bord avec un utilisateur vide.
+    afficherVue(VUES.DASHBOARD);
   }
 }
 
@@ -93,17 +92,22 @@ function demarrerEcouteBetail() {
   // Évite les abonnements multiples
   if (desabonnerBetail) return;
 
-  desabonnerBetail = ecouterBetail(
-    (betes) => {
-      betailEnMemoire = betes;
-      rafraichirIndicateurs();
-      rafraichirListe();
-    },
-    (erreur) => {
-      console.error(erreur);
-      afficherToast('Erreur de connexion à la base.', 'error');
-    }
-  );
+  try {
+    desabonnerBetail = ecouterBetail(
+      (betes) => {
+        betailEnMemoire = betes;
+        rafraichirIndicateurs();
+        rafraichirListe();
+      },
+      (erreur) => {
+        console.error(erreur);
+        afficherToast('Erreur de connexion à la base.', 'error');
+      }
+    );
+  } catch (erreur) {
+    // Config Firebase manquante / invalide : on n'empêche pas l'affichage
+    console.error('[Firestore] Impossible de démarrer l\'écoute :', erreur);
+  }
 }
 
 /**
@@ -296,39 +300,19 @@ function genererCarte(bete) {
 // =============================================================
 
 function brancherEcouteurs() {
-  // ---- Login ----
-  $('btn-login').addEventListener('click', async () => {
-    $('login-error').classList.add('hidden');
-    chargementGlobal(true);
-    try {
-      await connecterAvecGoogle();
-      // gererChangementAuth() fera le reste via ecouterAuth
-    } catch (erreur) {
-      if (erreur.code === 'ACCES_NON_AUTORISE') {
-        $('login-error').textContent = "Accès non autorisé. Cet e-mail n'est pas habilité à utiliser Vachtag.";
-        $('login-error').classList.remove('hidden');
-      } else if (erreur.code === 'auth/popup-closed-by-user' || erreur.code === 'auth/cancelled-popup-request') {
-        // L'utilisateur a fermé le popup : on ignore silencieusement
-      } else {
+  // ---- Logout (masqué en mode dev) ----
+  const btnLogout = $('btn-logout');
+  if (btnLogout) {
+    btnLogout.addEventListener('click', async () => {
+      try {
+        await deconnecter();
+        afficherToast('Déconnecté', 'info');
+      } catch (erreur) {
         console.error(erreur);
-        $('login-error').textContent = 'Erreur de connexion. Réessaie.';
-        $('login-error').classList.remove('hidden');
+        afficherToast('Erreur à la déconnexion', 'error');
       }
-    } finally {
-      chargementGlobal(false);
-    }
-  });
-
-  // ---- Logout ----
-  $('btn-logout').addEventListener('click', async () => {
-    try {
-      await deconnecter();
-      afficherToast('Déconnecté', 'info');
-    } catch (erreur) {
-      console.error(erreur);
-      afficherToast('Erreur à la déconnexion', 'error');
-    }
-  });
+    });
+  }
 
   // ---- Navigation depuis le tableau de bord ----
   $('btn-go-form').addEventListener('click', () => {
