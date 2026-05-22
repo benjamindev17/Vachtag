@@ -1,0 +1,145 @@
+/* =========================================================
+   Vachtag — Styles personnalisés complémentaires à Tailwind
+   ========================================================= */
+
+/* ---------- Base ---------- */
+html, body {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Empêche le zoom iOS sur les inputs (taille >= 16px) */
+input, select, textarea, button {
+  font-size: 16px;
+}
+
+/* ---------- Cibles tactiles (44px min) ---------- */
+.tap-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* ---------- Transitions douces entre vues ---------- */
+.view {
+  animation: fadeIn 200ms ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Vues actives -> on force le flex (utile car .hidden de Tailwind l'emporte sinon) */
+.view:not(.hidden) {
+  display: flex;
+}
+
+/* ---------- Toggle santé ---------- */
+.toggle-sante {
+  color: #6b7280;
+  background: transparent;
+}
+.toggle-sante.toggle-active {
+  background: #ffffff;
+  color: #111827;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.toggle-sante[data-value="En traitement"].toggle-active {
+  color: #c2410c; /* orange-700 */
+}
+
+/* ---------- Spinner ---------- */
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+.spinner-lg {
+  width: 40px;
+  height: 40px;
+  border-width: 4px;
+  border-color: rgba(22, 163, 74, 0.2);
+  border-top-color: #16a34a;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%) translateY(20px);
+  background: #111827;
+  color: #ffffff;
+  padding: 14px 22px;
+  border-radius: 14px;
+  font-weight: 500;
+  font-size: 14px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 220ms ease, transform 220ms ease;
+  max-width: calc(100% - 40px);
+  text-align: center;
+}
+.toast.toast-show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.toast.toast-success { background: #15803d; }
+.toast.toast-error   { background: #b91c1c; }
+
+/* ---------- Cartes bétail ---------- */
+.carte-betail {
+  background: #ffffff;
+  border: 1px solid #f3f4f6;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.carte-betail:active {
+  transform: scale(0.985);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* ---------- Badges sanitaires ---------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.badge-sain {
+  background: #dcfce7;
+  color: #166534;
+}
+.badge-traitement {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* ---------- Effets actifs sur boutons ---------- */
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+button {
+  transition: transform 90ms ease, background-color 150ms ease;
+}
+
+/* ---------- Scrollbar discrète (desktop) ---------- */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
