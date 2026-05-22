@@ -16,17 +16,17 @@ import { getAuth, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
 
 // =============================================================
-// ← REMPLACER PAR TES CLÉS FIREBASE
-// Récupère-les dans la console Firebase :
-//   Paramètres du projet → Général → Tes applications → Web → Config
+// Configuration Firebase du projet « vachtag-93bb1 »
+// Récupérée dans : Paramètres du projet → Général → Application Web
 // =============================================================
 const firebaseConfig = {
-  apiKey:            "REMPLACER_PAR_TA_API_KEY",
-  authDomain:        "REMPLACER_PAR_TON_AUTH_DOMAIN",      // ex. "vachtag-xxx.firebaseapp.com"
-  projectId:         "REMPLACER_PAR_TON_PROJECT_ID",       // ex. "vachtag-xxx"
-  storageBucket:     "REMPLACER_PAR_TON_STORAGE_BUCKET",   // ex. "vachtag-xxx.appspot.com"
-  messagingSenderId: "REMPLACER_PAR_TON_SENDER_ID",
-  appId:             "REMPLACER_PAR_TON_APP_ID",
+  apiKey:            "AIzaSyB53kWTYYS1-Jn01_WXmK8Gcqwk3hzZKWw",
+  authDomain:        "vachtag-93bb1.firebaseapp.com",
+  projectId:         "vachtag-93bb1",
+  storageBucket:     "vachtag-93bb1.firebasestorage.app",
+  messagingSenderId: "219957085809",
+  appId:             "1:219957085809:web:7cf3cc5fe1027f4f39fdd0",
+  measurementId:     "G-ZCW2D0X0JT",
 };
 
 // Initialisation de l'application Firebase
