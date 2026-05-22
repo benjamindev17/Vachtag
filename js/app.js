@@ -35,6 +35,18 @@ import {
 } from './utils.js';
 
 // =============================================================
+// ⚠️ DÉVELOPPEMENT — Authentification désactivée
+// -------------------------------------------------------------
+// Passer à `false` pour réactiver la connexion Google.
+// Quand `true` :
+//   - l'écran de connexion est ignoré
+//   - on accède directement au tableau de bord
+//   - le bouton de déconnexion est masqué
+//   - les règles Firestore doivent être en mode « ouvert » (voir firestore.rules)
+// =============================================================
+const AUTH_DESACTIVEE = true;
+
+// =============================================================
 // État applicatif en mémoire
 // =============================================================
 let betailEnMemoire = [];     // liste complète, alimentée par onSnapshot
@@ -360,6 +372,18 @@ function brancherEcouteurs() {
 
 function demarrer() {
   brancherEcouteurs();
+
+  if (AUTH_DESACTIVEE) {
+    // Mode développement : on saute la connexion et on entre directement
+    // dans l'application avec un utilisateur factice.
+    $('btn-logout').classList.add('hidden');
+    gererChangementAuth({
+      displayName: 'Agriculteur',
+      email:       'dev@local',
+    });
+    return;
+  }
+
   // Vue par défaut tant qu'on ne sait rien de l'utilisateur
   afficherVue(VUES.LOGIN);
   // Branche l'écouteur central d'auth

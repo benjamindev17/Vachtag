@@ -1,27 +1,45 @@
 rules_version = '2';
 
 // =============================================================
-// Règles de sécurité Firestore — Vachtag
+// ⚠️ MODE DÉVELOPPEMENT — RÈGLES OUVERTES
 // -------------------------------------------------------------
-// Seul un utilisateur authentifié dont l'e-mail correspond
-// EXACTEMENT à l'adresse autorisée peut lire ou écrire dans
-// la collection « betail ».
+// L'authentification est désactivée côté client (voir
+// AUTH_DESACTIVEE dans js/app.js). Pour que l'application
+// puisse lire/écrire dans Firestore, ces règles autorisent
+// temporairement TOUT accès à la collection « betail ».
 //
-// ⚠️ MODIFIER l'adresse e-mail ci-dessous puis déployer ces
-//    règles depuis la console Firebase :
-//    Firestore Database → Règles → Coller → Publier
+// 🚨 NE PAS LAISSER EN PRODUCTION — n'importe qui peut lire
+//    et modifier la base. À remplacer par les règles
+//    sécurisées ci-dessous dès que l'authentification Google
+//    sera réactivée.
 // =============================================================
 service cloud.firestore {
   match /databases/{database}/documents {
 
     match /betail/{document} {
-      allow read, write: if request.auth != null
-        && request.auth.token.email == 'agriculteur@gmail.com';
+      allow read, write: if true;
     }
 
-    // Refus par défaut sur tout le reste
     match /{document=**} {
       allow read, write: if false;
     }
   }
 }
+
+// =============================================================
+// 🔒 RÈGLES SÉCURISÉES À UTILISER UNE FOIS L'AUTH RÉACTIVÉE
+// -------------------------------------------------------------
+// Remplace le bloc ci-dessus par celui-ci, et modifie l'e-mail :
+//
+// service cloud.firestore {
+//   match /databases/{database}/documents {
+//     match /betail/{document} {
+//       allow read, write: if request.auth != null
+//         && request.auth.token.email == 'agriculteur@gmail.com';
+//     }
+//     match /{document=**} {
+//       allow read, write: if false;
+//     }
+//   }
+// }
+// =============================================================
